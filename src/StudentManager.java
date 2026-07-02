@@ -1,9 +1,12 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
+
 
 public class StudentManager {
 
     private static final ArrayList<Student> students = new ArrayList<>();
+    private static final HashMap<String, Student> studentMap = new HashMap<>();
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -45,24 +48,18 @@ public class StudentManager {
     }
 
     private static void addStudent() {
-        System.out.print("请输入学号：");
-        String id = scanner.next();
-
-        if (getStudentById(id) != null) {
-            System.out.println("学号已存在，添加失败");
-            return;
-        }
+        String id = inputStudentId();
 
         System.out.print("请输入姓名：");
         String name = scanner.next();
 
-        System.out.print("请输入年龄：");
-        int age = scanner.nextInt();
+        int age = inputAge();
 
-        System.out.print("请输入手机号：");
-        String phone = scanner.next();
+        String phone = inputPhone();
 
-        students.add(new Student(id, name, age, phone));
+        Student student = new Student(id, name, age, phone);
+        students.add(student);
+        studentMap.put(id, student);
         System.out.println("添加成功");
     }
 
@@ -77,6 +74,7 @@ public class StudentManager {
         }
 
         students.remove(student);
+        studentMap.remove(id);
         System.out.println("删除成功");
     }
 
@@ -93,11 +91,9 @@ public class StudentManager {
         System.out.print("请输入新姓名：");
         String name = scanner.next();
 
-        System.out.print("请输入新年龄：");
-        int age = scanner.nextInt();
+        int age = inputAge();
 
-        System.out.print("请输入新手机号：");
-        String phone = scanner.next();
+        String phone = inputPhone();
 
         student.setName(name);
         student.setAge(age);
@@ -141,11 +137,72 @@ public class StudentManager {
     }
 
     private static Student getStudentById(String id) {
-        for (Student student : students) {
-            if (student.getId().equals(id)) {
-                return student;
+        return studentMap.get(id);
+    }
+    private static int inputAge() {
+        while (true) {
+            System.out.print("请输入年龄：");
+            String ageStr = scanner.next();
+
+            try {
+                int age = Integer.parseInt(ageStr);
+
+                if (age <= 0 || age > 120) {
+                    System.out.println("年龄必须在 1 到 120 之间，请重新输入");
+                    continue;
+                }
+
+                return age;
+            } catch (NumberFormatException e) {
+                System.out.println("年龄必须是数字，请重新输入");
             }
         }
-        return null;
+
+    }
+    private static String inputPhone() {
+        while (true) {
+            System.out.print("请输入手机号：");
+            String phone = scanner.next();
+
+            if (phone.length() != 11) {
+                System.out.println("手机号必须是 11 位，请重新输入");
+                continue;
+            }
+
+            boolean allDigit = true;
+            for (int i = 0; i < phone.length(); i++) {
+                char c = phone.charAt(i);
+                if (c < '0' || c > '9') {
+                    allDigit = false;
+                    break;
+                }
+            }
+
+            if (!allDigit) {
+                System.out.println("手机号只能包含数字，请重新输入");
+                continue;
+            }
+
+            return phone;
+
+        }
+    }
+    private static String inputStudentId() {
+        while (true) {
+            System.out.print("请输入学号：");
+            String id = scanner.next();
+
+            if (id.length() < 3) {
+                System.out.println("学号长度不能小于 3 位，请重新输入");
+                continue;
+            }
+
+            if (getStudentById(id) != null) {
+                System.out.println("学号已存在，请重新输入");
+                continue;
+            }
+
+            return id;
+        }
     }
 }
