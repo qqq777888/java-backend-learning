@@ -45,3 +45,28 @@
 ### 今日总结
 ArrayList 适合按顺序保存和遍历所有学生，HashMap 适合根据学号快速查询学生。  
 同时维护 ArrayList 和 HashMap 时，添加和删除必须同步，否则可能出现数据不一致。
+
+
+## Day 3 学习内容
+
+### 今日完成
+- 安装并配置 MySQL 命令行环境
+- 创建 java_backend_learning 数据库
+- 创建 student 学生表
+- 学习 MySQL 基础字段类型：varchar、int、datetime
+- 掌握 SQL 基础增删改查
+- 学习 where 条件查询、like 模糊查询、order by 排序、limit 分页
+- 将 Day3 SQL 练习整理为 sql/day03_student.sql 并提交 GitHub
+
+### 今日技术点
+- create database 创建数据库
+- use 切换数据库
+- create table 创建表
+- insert 新增数据
+- select 查询数据
+- update 修改数据
+- delete 删除数据
+- where 条件过滤
+- like 模糊查询
+- order by 排序
+- limit 分页查询
