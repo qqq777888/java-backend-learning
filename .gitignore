@@ -1,3 +1,7 @@
+.idea/
+target/
+day05-jdbc-demo/target/
+*.class
 ### IntelliJ IDEA ###
 out/
 !**/src/main/**/out/
