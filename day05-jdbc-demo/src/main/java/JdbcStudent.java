@@ -1,14 +1,14 @@
-public class Student {
+public class JdbcStudent {
     private String id;
     private String name;
     private int age;
     private String phone;
     private String createTime;
 
-    public Student() {
+    public JdbcStudent() {
     }
 
-    public Student(String id, String name, int age, String phone, String createTime) {
+    public JdbcStudent(String id, String name, int age, String phone, String createTime) {
         this.id = id;
         this.name = name;
         this.age = age;

@@ -7,7 +7,7 @@ import java.util.List;
 public class StudentDao {
 
     // 查询所有学生
-    public List<Student> findAll() throws Exception {
+    public List<JdbcStudent> findAll() throws Exception {
         Connection connection = JdbcUtil.getConnection();
 
         String sql = "select id, name, age, phone, create_time from student";
@@ -16,27 +16,27 @@ public class StudentDao {
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        List<Student> students = new ArrayList<>();
+        List<JdbcStudent> jdbcStudents = new ArrayList<>();
 
         while (resultSet.next()) {
-            Student student = new Student();
+            JdbcStudent jdbcStudent = new JdbcStudent();
 
-            student.setId(resultSet.getString("id"));
-            student.setName(resultSet.getString("name"));
-            student.setAge(resultSet.getInt("age"));
-            student.setPhone(resultSet.getString("phone"));
-            student.setCreateTime(resultSet.getString("create_time"));
+            jdbcStudent.setId(resultSet.getString("id"));
+            jdbcStudent.setName(resultSet.getString("name"));
+            jdbcStudent.setAge(resultSet.getInt("age"));
+            jdbcStudent.setPhone(resultSet.getString("phone"));
+            jdbcStudent.setCreateTime(resultSet.getString("create_time"));
 
-            students.add(student);
+            jdbcStudents.add(jdbcStudent);
         }
 
         JdbcUtil.close(resultSet, preparedStatement, connection);
 
-        return students;
+        return jdbcStudents;
     }
 
     // 根据学号查询学生
-    public Student findById(String id) throws Exception {
+    public JdbcStudent findById(String id) throws Exception {
         Connection connection = JdbcUtil.getConnection();
 
         String sql = "select id, name, age, phone, create_time from student where id = ?";
@@ -47,35 +47,35 @@ public class StudentDao {
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        Student student = null;
+        JdbcStudent jdbcStudent = null;
 
         if (resultSet.next()) {
-            student = new Student();
+            jdbcStudent = new JdbcStudent();
 
-            student.setId(resultSet.getString("id"));
-            student.setName(resultSet.getString("name"));
-            student.setAge(resultSet.getInt("age"));
-            student.setPhone(resultSet.getString("phone"));
-            student.setCreateTime(resultSet.getString("create_time"));
+            jdbcStudent.setId(resultSet.getString("id"));
+            jdbcStudent.setName(resultSet.getString("name"));
+            jdbcStudent.setAge(resultSet.getInt("age"));
+            jdbcStudent.setPhone(resultSet.getString("phone"));
+            jdbcStudent.setCreateTime(resultSet.getString("create_time"));
         }
 
         JdbcUtil.close(resultSet, preparedStatement, connection);
 
-        return student;
+        return jdbcStudent;
     }
 
     // 新增学生
-    public int add(Student student) throws Exception {
+    public int add(JdbcStudent jdbcStudent) throws Exception {
         Connection connection = JdbcUtil.getConnection();
 
         String sql = "insert into student(id, name, age, phone, create_time) values (?, ?, ?, ?, now())";
 
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-        preparedStatement.setString(1, student.getId());
-        preparedStatement.setString(2, student.getName());
-        preparedStatement.setInt(3, student.getAge());
-        preparedStatement.setString(4, student.getPhone());
+        preparedStatement.setString(1, jdbcStudent.getId());
+        preparedStatement.setString(2, jdbcStudent.getName());
+        preparedStatement.setInt(3, jdbcStudent.getAge());
+        preparedStatement.setString(4, jdbcStudent.getPhone());
 
         int rows = preparedStatement.executeUpdate();
 
@@ -85,17 +85,17 @@ public class StudentDao {
     }
 
     // 修改学生
-    public int update(Student student) throws Exception {
+    public int update(JdbcStudent jdbcStudent) throws Exception {
         Connection connection = JdbcUtil.getConnection();
 
         String sql = "update student set name = ?, age = ?, phone = ? where id = ?";
 
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-        preparedStatement.setString(1, student.getName());
-        preparedStatement.setInt(2, student.getAge());
-        preparedStatement.setString(3, student.getPhone());
-        preparedStatement.setString(4, student.getId());
+        preparedStatement.setString(1, jdbcStudent.getName());
+        preparedStatement.setInt(2, jdbcStudent.getAge());
+        preparedStatement.setString(3, jdbcStudent.getPhone());
+        preparedStatement.setString(4, jdbcStudent.getId());
 
         int rows = preparedStatement.executeUpdate();
 

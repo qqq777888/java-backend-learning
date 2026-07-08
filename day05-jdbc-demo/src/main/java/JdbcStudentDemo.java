@@ -6,9 +6,9 @@ public class JdbcStudentDemo {
         StudentDao studentDao = new StudentDao();
 
         // 1. 查询所有
-        List<Student> students = studentDao.findAll();
-        for (Student student : students) {
-            System.out.println(student);
+        List<JdbcStudent> jdbcStudents = studentDao.findAll();
+        for (JdbcStudent jdbcStudent : jdbcStudents) {
+            System.out.println(jdbcStudent);
         }
 
         // 2. 根据 id 查询
