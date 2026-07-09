@@ -7,117 +7,109 @@ import java.util.List;
 public class StudentDao {
 
     // 查询所有学生
+    // 查询所有学生
     public List<JdbcStudent> findAll() throws Exception {
-        Connection connection = JdbcUtil.getConnection();
-
         String sql = "select id, name, age, phone, create_time from student";
 
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        List<JdbcStudent> students = new ArrayList<>();
 
-        ResultSet resultSet = preparedStatement.executeQuery();
+        try (
+                Connection connection = JdbcUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                ResultSet resultSet = preparedStatement.executeQuery()
+        ) {
+            while (resultSet.next()) {
+                JdbcStudent student = new JdbcStudent();
 
-        List<JdbcStudent> jdbcStudents = new ArrayList<>();
+                student.setId(resultSet.getString("id"));
+                student.setName(resultSet.getString("name"));
+                student.setAge(resultSet.getInt("age"));
+                student.setPhone(resultSet.getString("phone"));
+                student.setCreateTime(resultSet.getString("create_time"));
 
-        while (resultSet.next()) {
-            JdbcStudent jdbcStudent = new JdbcStudent();
-
-            jdbcStudent.setId(resultSet.getString("id"));
-            jdbcStudent.setName(resultSet.getString("name"));
-            jdbcStudent.setAge(resultSet.getInt("age"));
-            jdbcStudent.setPhone(resultSet.getString("phone"));
-            jdbcStudent.setCreateTime(resultSet.getString("create_time"));
-
-            jdbcStudents.add(jdbcStudent);
+                students.add(student);
+            }
         }
 
-        JdbcUtil.close(resultSet, preparedStatement, connection);
-
-        return jdbcStudents;
+        return students;
     }
 
     // 根据学号查询学生
+    // 根据学号查询学生
     public JdbcStudent findById(String id) throws Exception {
-        Connection connection = JdbcUtil.getConnection();
-
         String sql = "select id, name, age, phone, create_time from student where id = ?";
 
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try (
+                Connection connection = JdbcUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
+            preparedStatement.setString(1, id);
 
-        preparedStatement.setString(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    JdbcStudent student = new JdbcStudent();
 
-        ResultSet resultSet = preparedStatement.executeQuery();
+                    student.setId(resultSet.getString("id"));
+                    student.setName(resultSet.getString("name"));
+                    student.setAge(resultSet.getInt("age"));
+                    student.setPhone(resultSet.getString("phone"));
+                    student.setCreateTime(resultSet.getString("create_time"));
 
-        JdbcStudent jdbcStudent = null;
-
-        if (resultSet.next()) {
-            jdbcStudent = new JdbcStudent();
-
-            jdbcStudent.setId(resultSet.getString("id"));
-            jdbcStudent.setName(resultSet.getString("name"));
-            jdbcStudent.setAge(resultSet.getInt("age"));
-            jdbcStudent.setPhone(resultSet.getString("phone"));
-            jdbcStudent.setCreateTime(resultSet.getString("create_time"));
+                    return student;
+                }
+            }
         }
 
-        JdbcUtil.close(resultSet, preparedStatement, connection);
-
-        return jdbcStudent;
+        return null;
     }
-
     // 新增学生
-    public int add(JdbcStudent jdbcStudent) throws Exception {
-        Connection connection = JdbcUtil.getConnection();
-
+    // 新增学生
+    public int add(JdbcStudent student) throws Exception {
         String sql = "insert into student(id, name, age, phone, create_time) values (?, ?, ?, ?, now())";
 
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try (
+                Connection connection = JdbcUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
+            preparedStatement.setString(1, student.getId());
+            preparedStatement.setString(2, student.getName());
+            preparedStatement.setInt(3, student.getAge());
+            preparedStatement.setString(4, student.getPhone());
 
-        preparedStatement.setString(1, jdbcStudent.getId());
-        preparedStatement.setString(2, jdbcStudent.getName());
-        preparedStatement.setInt(3, jdbcStudent.getAge());
-        preparedStatement.setString(4, jdbcStudent.getPhone());
-
-        int rows = preparedStatement.executeUpdate();
-
-        JdbcUtil.close(preparedStatement, connection);
-
-        return rows;
+            return preparedStatement.executeUpdate();
+        }
     }
 
     // 修改学生
-    public int update(JdbcStudent jdbcStudent) throws Exception {
-        Connection connection = JdbcUtil.getConnection();
-
+    // 修改学生
+    public int update(JdbcStudent student) throws Exception {
         String sql = "update student set name = ?, age = ?, phone = ? where id = ?";
 
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try (
+                Connection connection = JdbcUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
+            preparedStatement.setString(1, student.getName());
+            preparedStatement.setInt(2, student.getAge());
+            preparedStatement.setString(3, student.getPhone());
+            preparedStatement.setString(4, student.getId());
 
-        preparedStatement.setString(1, jdbcStudent.getName());
-        preparedStatement.setInt(2, jdbcStudent.getAge());
-        preparedStatement.setString(3, jdbcStudent.getPhone());
-        preparedStatement.setString(4, jdbcStudent.getId());
-
-        int rows = preparedStatement.executeUpdate();
-
-        JdbcUtil.close(preparedStatement, connection);
-
-        return rows;
+            return preparedStatement.executeUpdate();
+        }
     }
 
     // 删除学生
+    // 删除学生
     public int delete(String id) throws Exception {
-        Connection connection = JdbcUtil.getConnection();
-
         String sql = "delete from student where id = ?";
 
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try (
+                Connection connection = JdbcUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
+            preparedStatement.setString(1, id);
 
-        preparedStatement.setString(1, id);
-
-        int rows = preparedStatement.executeUpdate();
-
-        JdbcUtil.close(preparedStatement, connection);
-
-        return rows;
+            return preparedStatement.executeUpdate();
+        }
     }
 }

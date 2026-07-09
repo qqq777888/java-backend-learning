@@ -1,17 +1,39 @@
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Properties;
 
 public class JdbcUtil {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/java_backend_learning?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=utf8";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "465778";
+    private static String url;
+    private static String username;
+    private static String password;
+    private static String driver;
+
+    static {
+        try {
+            Properties properties = new Properties();
+
+            InputStream inputStream = JdbcUtil.class.getClassLoader().getResourceAsStream("db.properties");
+
+            properties.load(inputStream);
+
+            url = properties.getProperty("url");
+            username = properties.getProperty("username");
+            password = properties.getProperty("password");
+            driver = properties.getProperty("driver");
+
+            Class.forName(driver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // 获取数据库连接
     public static Connection getConnection() throws Exception {
-        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        return DriverManager.getConnection(url, username, password);
     }
 
     // 关闭资源：查询用
