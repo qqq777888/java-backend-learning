@@ -1,3 +1,5 @@
+package com.cc2022111694.util;
+
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;

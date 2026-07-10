@@ -1,3 +1,5 @@
+package com.cc2022111694.entity;
+
 public class JdbcStudent {
     private String id;
     private String name;

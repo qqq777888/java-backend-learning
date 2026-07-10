@@ -184,3 +184,36 @@ Day7 主要是对 day05-jdbc-demo 进行代码优化。
 之前数据库地址、用户名、密码都直接写在 JdbcUtil.java 里，现在改成写在 db.properties 配置文件中，JdbcUtil 负责读取配置文件。
 
 之前 StudentDao 里需要手动调用 JdbcUtil.close() 关闭数据库资源，现在改成 try-with-resources，Java 会自动关闭资源，代码更安全、更简洁，也更接近真实后端项目写法。
+
+
+
+
+## Day 8 学习内容
+
+### 今日完成
+- 新增 StudentService 业务层
+- 在 StudentService 中实现学生的增删改查业务方法
+- 新增学生时增加学号重复校验
+- 修改学生时增加学生是否存在校验
+- 删除学生时增加学生是否存在校验
+- 将 JdbcStudentManager 改为通过 StudentService 调用 StudentDao
+- 完成 JDBC 学生管理系统三层架构改造
+- 理解 Manager、Service、DAO 各层职责
+- 完成 Git 提交并推送 GitHub
+
+### 今日技术点
+- Service 业务层
+- 三层架构
+- 分层设计（Layered Architecture）
+- 业务逻辑（Business Logic）
+- 单一职责原则（Single Responsibility Principle）
+- CRUD 业务封装
+- boolean 返回值设计
+- 面向对象分层思想
+
+### 今日总结
+Day8 主要是在 day05-jdbc-demo 项目中新增 Service 层，对学生管理系统进行三层架构改造。
+
+之前 JdbcStudentManager 直接调用 StudentDao 完成数据库操作，同时负责学号是否重复、学生是否存在等业务判断，导致控制层承担了过多职责。现在新增 StudentService 后，将所有业务逻辑统一放到 Service 层处理，JdbcStudentManager 只负责接收用户输入、调用 Service 并输出结果，StudentDao 则专门负责数据库的增删改查操作。
+
+通过本次重构，项目形成了 Manager → Service → DAO → MySQL 的标准调用流程，更符合企业 Java 后端开发中的分层设计思想，也为后续学习 MyBatis 和 Spring Boot 的 Controller → Service → Mapper 三层架构打下了基础。
